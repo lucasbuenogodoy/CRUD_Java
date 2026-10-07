@@ -115,6 +115,23 @@ public class AtivoDAOImpl implements GenericDAO {
 
     @Override
     public void excluir(int idObject) {
+        PreparedStatement stmt = null;
+        String sql = "DELETE FROM ativo WHERE id_ativo = ?";
+        try {
+            stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, idObject);
+            stmt.executeUpdate();
+        } catch (SQLException ex) {
+            System.out.println("Problemas ao excluir Ativo! Erro: " + ex.getMessage());
+            ex.printStackTrace();
+        } finally {
+            try {
+                ConnectionFactory.closeConnection(conn, stmt);
+            } catch (Exception ex) {
+                System.out.println("Problemas ao fechar os parâmetros de conexão! Erro: " + ex.getMessage());
+                ex.printStackTrace();
+            }
+        }
     }
 
     @Override
