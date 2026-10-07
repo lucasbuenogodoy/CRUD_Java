@@ -85,7 +85,32 @@ public class AtivoDAOImpl implements GenericDAO {
 
     @Override
     public Boolean alterar(Object object) {
-        return false;
+        Ativo ativo = (Ativo) object;
+        PreparedStatement stmt = null;
+        String sql = "UPDATE ativo SET codigo_ativo = ?, nome_empresa = ?, tipo_investimento = ?, "
+                + "quantidade_cotas = ?, preco_unitario = ? WHERE id_ativo = ?";
+        try {
+            stmt = conn.prepareStatement(sql);
+            stmt.setString(1, ativo.getCodigoAtivo());
+            stmt.setString(2, ativo.getNomeEmpresa());
+            stmt.setString(3, ativo.getTipoInvestimento());
+            stmt.setInt(4, ativo.getQuantidadeCotas());
+            stmt.setBigDecimal(5, ativo.getPrecoUnitario());
+            stmt.setInt(6, ativo.getIdAtivo());
+            stmt.executeUpdate();
+            return true;
+        } catch (SQLException ex) {
+            System.out.println("Problemas ao alterar Ativo! Erro: " + ex.getMessage());
+            ex.printStackTrace();
+            return false;
+        } finally {
+            try {
+                ConnectionFactory.closeConnection(conn, stmt);
+            } catch (Exception ex) {
+                System.out.println("Problemas ao fechar os parâmetros de conexão! Erro: " + ex.getMessage());
+                ex.printStackTrace();
+            }
+        }
     }
 
     @Override
@@ -94,6 +119,34 @@ public class AtivoDAOImpl implements GenericDAO {
 
     @Override
     public Object buscarPorId(int idObject) {
-        return null;
+        Ativo ativo = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        String sql = "SELECT * FROM ativo WHERE id_ativo = ?";
+        try {
+            stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, idObject);
+            rs = stmt.executeQuery();
+            if (rs.next()) {
+                ativo = new Ativo();
+                ativo.setIdAtivo(rs.getInt("id_ativo"));
+                ativo.setCodigoAtivo(rs.getString("codigo_ativo"));
+                ativo.setNomeEmpresa(rs.getString("nome_empresa"));
+                ativo.setTipoInvestimento(rs.getString("tipo_investimento"));
+                ativo.setQuantidadeCotas(rs.getInt("quantidade_cotas"));
+                ativo.setPrecoUnitario(rs.getBigDecimal("preco_unitario"));
+            }
+        } catch (SQLException ex) {
+            System.out.println("Problemas ao buscar Ativo! Erro: " + ex.getMessage());
+            ex.printStackTrace();
+        } finally {
+            try {
+                ConnectionFactory.closeConnection(conn, stmt, rs);
+            } catch (Exception ex) {
+                System.out.println("Problemas ao fechar os parâmetros de conexão! Erro: " + ex.getMessage());
+                ex.printStackTrace();
+            }
+        }
+        return ativo;
     }
 }
