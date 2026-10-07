@@ -7,6 +7,7 @@ import java.util.List;
 import br.com.aporte.model.Ativo;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.ResultSet;
 
 public class AtivoDAOImpl implements GenericDAO {
 
@@ -51,7 +52,35 @@ public class AtivoDAOImpl implements GenericDAO {
 
     @Override
     public List<Object> listar() {
-        return new ArrayList<>();
+        List<Object> resultado = new ArrayList<>();
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        String sql = "SELECT * FROM ativo ORDER BY id_ativo";
+        try {
+            stmt = conn.prepareStatement(sql);
+            rs = stmt.executeQuery();
+            while (rs.next()) {
+                Ativo ativo = new Ativo();
+                ativo.setIdAtivo(rs.getInt("id_ativo"));
+                ativo.setCodigoAtivo(rs.getString("codigo_ativo"));
+                ativo.setNomeEmpresa(rs.getString("nome_empresa"));
+                ativo.setTipoInvestimento(rs.getString("tipo_investimento"));
+                ativo.setQuantidadeCotas(rs.getInt("quantidade_cotas"));
+                ativo.setPrecoUnitario(rs.getBigDecimal("preco_unitario"));
+                resultado.add(ativo);
+            }
+        } catch (SQLException ex) {
+            System.out.println("Problemas ao listar Ativos! Erro: " + ex.getMessage());
+            ex.printStackTrace();
+        } finally {
+            try {
+                ConnectionFactory.closeConnection(conn, stmt, rs);
+            } catch (Exception ex) {
+                System.out.println("Problemas ao fechar os parâmetros de conexão! Erro: " + ex.getMessage());
+                ex.printStackTrace();
+            }
+        }
+        return resultado;
     }
 
     @Override
