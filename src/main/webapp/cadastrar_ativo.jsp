@@ -7,7 +7,7 @@
     </head>
     <body>
         <h1>Cadastro de Ativo</h1>
-        <form name="cadastrarativo" action="CadastrarAtivo" method="post">
+        <form name="cadastrar_ativo" action="CadastrarAtivo" method="post">
             Código do ativo: <input type="text" name="codigoAtivo" size="10" />
             <br>
             Nome da empresa/fundo: <input type="text" name="nomeEmpresa" size="40" />
