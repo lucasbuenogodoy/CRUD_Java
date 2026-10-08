@@ -28,6 +28,8 @@
         </form>
         ${sucesso}
         <br>
+        <a href="ListarAtivo">Ver lista de ativos</a>
+        <br>
         <a href="index.jsp">Voltar</a>
     </body>
 </html>
