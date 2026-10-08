@@ -8,6 +8,6 @@
     <body>
         <h1>Aporte</h1>
         <a href="cadastrar_ativo.jsp">Cadastrar Ativo</a><br />
-        <a href="listar_ativo.jsp">Listar Ativos</a>
+        <a href="ListarAtivo">Listar Ativos</a>
     </body>
 </html>
